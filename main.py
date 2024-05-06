@@ -5,7 +5,7 @@ import time
 # set up pygame modules
 pygame.init()
 pygame.font.init()
-title_font = pygame.font.SysFont('centaur', 120)
+title_font = pygame.font.SysFont('curlz', 120)
 pygame.display.set_caption("COOKING GAME [CHANGE NAME LATER]")
 for i in pygame.font.get_fonts():
     print(i)
