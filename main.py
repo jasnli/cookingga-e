@@ -6,11 +6,19 @@ import time
 pygame.init()
 pygame.font.init()
 title_font = pygame.font.SysFont('curlz', 120)
+title_font.set_bold(True)
+temporary_font = pygame.font.SysFont('Arial', 40)
 pygame.display.set_caption("COOKING GAME [CHANGE NAME LATER]")
-for i in pygame.font.get_fonts():
-    print(i)
 # background
 bg = pygame.image.load("background.jpg")
+
+# start button
+start_button = pygame.image.load("start.png")
+start_button = pygame.transform.scale(start_button, (228, 92))
+print(start_button.get_size())
+
+# [TEMP] mouse position
+mouse_position = (0, 0)
 
 # set up variables for the display
 SCREEN_HEIGHT = 1020
@@ -18,17 +26,17 @@ SCREEN_WIDTH = 1920
 size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 screen = pygame.display.set_mode(size)
 
-
-r = 50
-g = 0
-b = 100
+# VARIABLE FOR START
+start = False
 
 # render the text for later
-message = "TEST TITLE MESSAGE"
-display_message = title_font.render(message, True, (255, 255, 255))
+title_message = "COOKING GAME" #CHANGE NAME LATER
+title_screen_msg = title_font.render(title_message, True, (114, 189, 53))
+# [TEMP] mouse pos text
+mouse_position_text = temporary_font.render(str(mouse_position), True, (0, 0, 0))
 
 
-# Instantiate the apple
+
 
 # The loop will carry on until the user exits the game (e.g. clicks the close button).
 run = True
@@ -42,19 +50,33 @@ while run:
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             run = False
+        # mouse coordinates
+        if event.type == pygame.MOUSEMOTION:
+            mouse_position = pygame.mouse.get_pos()
+            mouse_position_text = temporary_font.render(str(mouse_position), True, (0, 0, 0))
+        if event.type == pygame.MOUSEBUTTONDOWN and 833 < mouse_position[0] < 833 + start_button.get_size()[0] and 550 < mouse_position[1] < start_button.get_size()[1] + 550:
+            start = True
+
+
 
     ##  ----- NO BLIT ZONE END  ----- ##
 
     ## FILL SCREEN, and BLIT here ##
+    # start screen
     screen.fill((0, 0, 0))
     screen.blit(bg, (0, 0))
-    screen.blit(display_message, (150, 250))
+    if not start:
+        screen.blit(start_button, (833, 550))
+        screen.blit(title_screen_msg, (550, 250))
+    screen.blit(mouse_position_text, mouse_position)
+
+
+
     pygame.display.update()
     ## END OF WHILE LOOP
 
 # Once we have exited the main program loop we can stop the game engine:
 pygame.quit()
-
 
 
 
