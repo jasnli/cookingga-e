@@ -1,4 +1,5 @@
 import pygame
+from food import Food
 import random
 import time
 
@@ -11,6 +12,11 @@ temporary_font = pygame.font.SysFont('Arial', 40)
 pygame.display.set_caption("COOKING GAME [CHANGE NAME LATER]")
 # background
 bg = pygame.image.load("background.jpg")
+### NOTE FOR SELF ###
+### MAKE A NEW SCREEN FOR SELECTION LATER ON ###
+
+# foods creation
+steak = Food("steak", 100, 100)
 
 # start button
 start_button = pygame.image.load("start.png")
@@ -57,6 +63,11 @@ while run:
         if event.type == pygame.MOUSEBUTTONDOWN and 833 < mouse_position[0] < 833 + start_button.get_size()[0] and 550 < mouse_position[1] < start_button.get_size()[1] + 550:
             start = True
 
+        # TEMPORARY COOKING
+        if event.type == pygame.MOUSEBUTTONDOWN and steak.rect.collidepoint(event.pos):
+            steak.cooked = True
+            steak.update_photo()
+
 
 
     ##  ----- NO BLIT ZONE END  ----- ##
@@ -68,10 +79,12 @@ while run:
     if not start:
         screen.blit(start_button, (833, 550))
         screen.blit(title_screen_msg, (550, 250))
+
+    # start [TEMP]
+    if start:
+        screen.blit(steak.image, steak.rect)
+
     screen.blit(mouse_position_text, mouse_position)
-
-
-
     pygame.display.update()
     ## END OF WHILE LOOP
 
