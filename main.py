@@ -3,6 +3,7 @@ from food import Food
 import random
 import time
 
+
 # set up pygame modules
 pygame.init()
 pygame.font.init()
@@ -21,7 +22,6 @@ steak = Food("steak", 100, 100)
 # start button
 start_button = pygame.image.load("start.png")
 start_button = pygame.transform.scale(start_button, (228, 92))
-print(start_button.get_size())
 
 # [TEMP] mouse position
 mouse_position = (0, 0)
@@ -64,9 +64,14 @@ while run:
             start = True
 
         # TEMPORARY COOKING
+        # if event.type == pygame.MOUSEBUTTONDOWN and steak.rect.collidepoint(event.pos):
+        #     steak.cooked = True
+        #     steak.update_photo()
+
+        # TEMPORARY CUT
         if event.type == pygame.MOUSEBUTTONDOWN and steak.rect.collidepoint(event.pos):
-            steak.cooked = True
-            steak.update_photo()
+            steak.chop_food()
+            print(steak.image_size)
 
 
 
@@ -83,6 +88,22 @@ while run:
     # start [TEMP]
     if start:
         screen.blit(steak.image, steak.rect)
+
+    ### test
+    origin1 = (0, 0)
+    separation = 20
+
+
+    width, height = steak.image_size[0] / 2, steak.image_size
+    origin2 = origin1[0] + width + separation, origin1[1]
+
+    # Blit first half
+    source_area = pygame.Rect((0, 0), (width, height))
+    screen.blit(steak.rect, origin1, source_area)
+
+    # Blit second half
+    source_area = pygame.Rect((width, 0), (width, height))
+    screen.blit(steak.rect, origin2, source_area)
 
     screen.blit(mouse_position_text, mouse_position)
     pygame.display.update()
