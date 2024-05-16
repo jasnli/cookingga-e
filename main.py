@@ -17,7 +17,7 @@ bg = pygame.image.load("background.jpg")
 ### MAKE A NEW SCREEN FOR SELECTION LATER ON ###
 
 # foods creation
-steak = Food("steak", 100, 100)
+steaks = []
 
 # start button
 start_button = pygame.image.load("start.png")
@@ -41,14 +41,18 @@ title_screen_msg = title_font.render(title_message, True, (114, 189, 53))
 # [TEMP] mouse pos text
 mouse_position_text = temporary_font.render(str(mouse_position), True, (0, 0, 0))
 
-
+# frame
+frame = 0
+clock = pygame.time.Clock()
 
 
 # The loop will carry on until the user exits the game (e.g. clicks the close button).
 run = True
+move = False
 
 # -------- Main Program Loop -----------
 while run:
+    clock.tick(60)
 
 
     # --- Main event loop
@@ -63,16 +67,30 @@ while run:
         if event.type == pygame.MOUSEBUTTONDOWN and 833 < mouse_position[0] < 833 + start_button.get_size()[0] and 550 < mouse_position[1] < start_button.get_size()[1] + 550:
             start = True
 
+        # SPAWN STEAK
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_s:
+                for i in range(1):
+                    steak = Food("steak", mouse_position[0] - 128, mouse_position[1] - 128)
+                    steaks.append(steak)
+
         # TEMPORARY COOKING
-        if event.type == pygame.MOUSEBUTTONDOWN and steak.rect.collidepoint(event.pos):
-            steak.cooked = True
-            steak.update_photo()
+        if len(steaks) > 0:
+            for i in steaks:
+                if event.type == pygame.MOUSEBUTTONDOWN and i.rect.collidepoint(event.pos):
+                    i.cooked = True
+                    i.update_photo()
 
-        # TEMPORARY CUT
-        # if event.type == pygame.MOUSEBUTTONDOWN and steak.rect.collidepoint(event.pos):
-        #     steak.chop_food()
-        #     print(steak.image_size)
+        # DRAGGING OBJECT CHANGE THIS LATER
+        for i in steaks:
+            if event.type == pygame.MOUSEBUTTONDOWN and i.rect.collidepoint(event.pos):
+                move = True
+            if event.type == pygame.MOUSEBUTTONUP:
+                move = False
+                if move:
+                    i.move_food(mouse_position)
 
+        # move_object(steak)
 
 
     ##  ----- NO BLIT ZONE END  ----- ##
@@ -87,26 +105,13 @@ while run:
 
     # start [TEMP]
     if start:
-        screen.blit(steak.image, steak.rect)
-
-    # ### test DELETE LATER
-    # origin1 = (0, 0)
-    # separation = 20
-    #
-    #
-    # width, height = steak.image_size[0] / 2, steak.image_size
-    # origin2 = origin1[0] + width + separation, origin1[1]
-    #
-    # # Blit first half
-    # source_area = pygame.Rect((0, 0), (width, height))
-    # screen.blit(steak.rect, origin1, source_area)
-    #
-    # # Blit second half
-    # source_area = pygame.Rect((width, 0), (width, height))
-    # screen.blit(steak.rect, origin2, source_area)
+        if len(steaks) > 0:
+            for i in steaks:
+                screen.blit(i.image, i.rect)
 
     screen.blit(mouse_position_text, mouse_position)
     pygame.display.update()
+    print(steaks)
     ## END OF WHILE LOOP
 
 # Once we have exited the main program loop we can stop the game engine:
