@@ -94,18 +94,18 @@ while run:
         if len(foods) > 0:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    for s in foods:
-                        print('hi')
-                        if s.rect.collidepoint(event.pos):
-                            move = True
-            if event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1:
-                    move = False
+                    move = True
+                for s in foods:
+                    print('hi')
+                    if s.rect.collidepoint(event.pos):
+                        move = True
+        if move:
+            s.move_food((mouse_position[0] - s.image_size[0] / 3, mouse_position[1] - s.image_size[0] / 3))
+            s.update_photo()
+        if event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:
+                move = False
 
-            for s in foods:
-                if move:
-                    s.move_food((mouse_position[0] - s.image_size[0]/3, mouse_position[1] - s.image_size[0]/3))
-                    s.update_photo()
 
         # MARKET SCREEN
         # if start and not market:
