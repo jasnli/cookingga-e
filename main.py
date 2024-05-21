@@ -1,5 +1,6 @@
 import pygame
 from food import Food
+from button import Button
 import random
 import time
 
@@ -14,17 +15,13 @@ pygame.display.set_caption("COOKING GAME [CHANGE NAME LATER]")
 # background
 bg = pygame.image.load("background.jpg")
 # BUTTONS
-start_button = pygame.image.load("start.png")
-start_button = pygame.transform.scale(start_button, (228, 92))
+buttons = [Button("start.png", 833, 550), Button("make_steak_button.png", 500, 500)]
 
-market_button = pygame.image.load("market.png")
-
-temporary_button = pygame.image.load("temporary.png")
 ### NOTE FOR SELF ###
 ### MAKE A NEW SCREEN FOR SELECTION LATER ON ###
 
 ## TEXTURES TEMPORARY:
-# COOKED_STEAK, START, BACKGROUND
+# COOKED_STEAK, START, BACKGROUND, FREEZER
 
 
 # foods creation
@@ -42,7 +39,7 @@ screen = pygame.display.set_mode(size)
 
 # VARIABLE FOR SCREENS
 start = False
-market = False
+select_screen = False
 
 # render the text for later
 title_message = "COOKING GAME" #CHANGE NAME LATER
@@ -58,12 +55,16 @@ clock = pygame.time.Clock()
 # The loop will carry on until the user exits the game (e.g. clicks the close button).
 run = True
 move = False
-
+move_1 = False
+move_other_object = True
+selection_made = False
+cooking = False
 # -------- Main Program Loop -----------
 while run:
     clock.tick(60)
 
-
+    # if selection_made:
+    #     start = True
     # --- Main event loop
     ## ----- NO BLIT ZONE START ----- ##
     for event in pygame.event.get():  # User did something
@@ -73,38 +74,49 @@ while run:
         if event.type == pygame.MOUSEMOTION:
             mouse_position = pygame.mouse.get_pos()
             mouse_position_text = temporary_font.render(str(mouse_position), True, (0, 0, 0))
-        if event.type == pygame.MOUSEBUTTONDOWN and 833 < mouse_position[0] < 833 + start_button.get_size()[0] and 550 < mouse_position[1] < start_button.get_size()[1] + 550:
-            start = True
+        if event.type == pygame.MOUSEBUTTONDOWN and buttons[0].rect.collidepoint(event.pos):
+            select_screen = True
+        if select_screen:
+            if event.type == pygame.MOUSEBUTTONDOWN and buttons[1].rect.collidepoint(event.pos):
+                cooking = True
+                select_screen = False
 
-        # SPAWN STEAK
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_s:
-                for i in range(1):
-                    steak = Food("steak", mouse_position[0] - 128, mouse_position[1] - 128)
-                    foods.append(steak)
+
+            # SPAWN STEAK
+        if cooking:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_s:
+                    for i in range(1):
+                        steak = Food("steak", mouse_position[0] - 128, mouse_position[1] - 128)
+                        foods.append(steak)
 
         # TEMPORARY COOKING
-        if len(foods) > 0:
-            for s in foods:
-                if event.type == pygame.MOUSEBUTTONDOWN and i.rect.collidepoint(event.pos):
-                    s.cooked = True
-                    s.update_photo()
-
-        # DRAGGING OBJECT CHANGE THIS LATER
-        if len(foods) > 0:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    move = True
+            if len(foods) > 0:
                 for s in foods:
-                    print('hi')
-                    if s.rect.collidepoint(event.pos):
-                        move = True
-        if move:
-            s.move_food((mouse_position[0] - s.image_size[0] / 3, mouse_position[1] - s.image_size[0] / 3))
-            s.update_photo()
-        if event.type == pygame.MOUSEBUTTONUP:
-            if event.button == 1:
-                move = False
+                    if event.type == pygame.MOUSEBUTTONDOWN and s.rect.collidepoint(event.pos):
+                        if event.button == 3:
+                            s.cooked = True
+                            s.update_photo()
+
+            # DRAGGING OBJECT CHANGE THIS LATER
+            if len(foods) > 0:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        move_1 = True
+                if move_1:
+                    for s in foods:
+                        if s.rect.collidepoint(event.pos) and move_other_object:
+                            move = True
+                            moved_object = s
+                            move_other_object = False
+                        if move:
+                            moved_object.move_food((mouse_position[0] - moved_object.image_size[0] / 2, mouse_position[1] - moved_object.image_size[0] / 2))
+                            moved_object.update_photo()
+                        if event.type == pygame.MOUSEBUTTONUP:
+                            if event.button == 1:
+                                move = False
+                                move_1 = False
+                                move_other_object = True
 
 
         # MARKET SCREEN
@@ -122,17 +134,19 @@ while run:
     # start screen
     screen.fill((0, 0, 0))
     screen.blit(bg, (0, 0))
-    if not start:
-        screen.blit(start_button, (833, 550))
+    if not select_screen and not cooking:
+        screen.blit(buttons[0].image, buttons[0].rect)
         screen.blit(title_screen_msg, (550, 250))
+    if select_screen:
+        screen.blit(buttons[1].image, buttons[1].rect)
 
     # start [TEMP]
-    if start:
+    if cooking:
         if len(foods) > 0:
             for i in foods:
                 screen.blit(i.image, i.rect)
-        # if not market:
-        #     screen.blit()
+        if select_screen:
+            print("")
 
     screen.blit(mouse_position_text, mouse_position)
     pygame.display.update()

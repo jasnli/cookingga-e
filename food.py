@@ -13,6 +13,7 @@ class Food:
         self.x = x
         self.y = y
         self.chop_number = 1
+        self.movable = True
 
         if food_type == "steak":
             self.chopped = False
@@ -24,6 +25,10 @@ class Food:
 
     def update_photo(self):
         if self.food_type == "steak":
+            if not self.cooked and not self.chopped:
+                self.image = self.image
+                self.image_size = self.image.get_size()
+                self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
             if self.cooked and not self.chopped:
                 self.image = set_photo_and_resize("cooked_steak.png", (256, 256))
                 self.image_size = self.image.get_size()
