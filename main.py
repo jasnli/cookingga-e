@@ -90,8 +90,17 @@ while run:
                         steak = Food("steak", mouse_position[0] - 128, mouse_position[1] - 128)
                         foods.append(steak)
 
-        # TEMPORARY COOKING
+
             if len(foods) > 0:
+            # CHOPPING (TEMP)
+                for s in foods:
+                    if event.type == pygame.MOUSEBUTTONDOWN and s.rect.collidepoint(event.pos):
+                        if event.button == 2:
+                            print(s.chop_number)
+                            s.chop_food()
+                            s.update_photo()
+
+            # COOKING (TEMP)
                 for s in foods:
                     if event.type == pygame.MOUSEBUTTONDOWN and s.rect.collidepoint(event.pos):
                         if event.button == 3:
