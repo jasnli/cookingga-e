@@ -41,8 +41,15 @@ class Food:
                     self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "raw_steak_cut_2.png")
                 if self.chop_number == 3:
                     self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "raw_steak_cut_3.png")
-            if self.cooked and self.chop_number == 0:
-                self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "cooked_steak.png")
+            if self.cooked:
+                if self.chop_number == 0:
+                    self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "cooked_steak.png")
+                if self.chop_number == 1:
+                    self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "cooked_steak_cut_1.png")
+                if self.chop_number == 2:
+                    self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "cooked_steak_cut_2.png")
+                if self.chop_number == 3:
+                    self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "cooked_steak_cut_3.png")
 
     def chop_food(self):
         self.chop_number = self.chop_number + 1
