@@ -53,6 +53,8 @@ class Food:
 
     def chop_food(self):
         self.chop_number = self.chop_number + 1
+        if self.chop_number > 3:
+            self.chop_number = 3
 
     def move_food(self, new_pos):
         self.x = new_pos[0]

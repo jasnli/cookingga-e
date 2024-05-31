@@ -12,12 +12,14 @@ pygame.font.init()
 title_font = pygame.font.SysFont('curlz', 120)
 title_font.set_bold(True)
 temporary_font = pygame.font.SysFont('Arial', 40)
+temp_big_font = pygame.font.SysFont('Arial', 100)
 pygame.display.set_caption("COOKING GAME [CHANGE NAME LATER]")
 # background
 bg = pygame.image.load("background.jpg")
 # BUTTONS
 buttons = [Button("start.png", 833, 550), Button("make_steak_button.png", 1300, 200)]
-
+# RECEIPT
+receipt = pygame.image.load("receipt.png")
 ### NOTE FOR SELF ###
 ### MAKE A NEW SCREEN FOR SELECTION LATER ON ###
 
@@ -35,7 +37,7 @@ size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 screen = pygame.display.set_mode(size)
 
 # customer maker
-customer = Customer(300, SCREEN_HEIGHT - 852)
+customer = Customer(SCREEN_HEIGHT)
 customer_pics = ["customer_1.png", "customer_2.png", "customer_3.png"]
 # foods creation
 foods = []
@@ -47,6 +49,7 @@ select_screen = False
 # render the text for later
 title_message = "COOKING GAME" #CHANGE NAME LATER
 title_screen_msg = title_font.render(title_message, True, (114, 189, 53))
+temporary_text = temp_big_font.render("ALL SPRITES ARE TEMPORARY AS PLACEHOLDERS", True, (114, 189, 53))
 # [TEMP] mouse pos text
 mouse_position_text = temporary_font.render(str(mouse_position), True, (0, 0, 0))
 
@@ -67,10 +70,10 @@ new_order = False
 while run:
     clock.tick(60)
 
-
     if new_order:
         random_customer_image = random.randint(0, 2)
         customer.customer_updater(customer_pics[random_customer_image])
+        new_order = False
     # if selection_made:
     #     start = True
     # --- Main event loop
@@ -150,6 +153,8 @@ while run:
         screen.blit(title_screen_msg, (550, 250))
     if select_screen:
         # customer
+        screen.blit(temporary_text, (50, 100))
+        screen.blit(receipt, (customer.image_size[0] + 50, SCREEN_HEIGHT - receipt.get_size()[1] - 100))
         screen.blit(customer.customer_image, customer.rect)
         screen.blit(buttons[1].image, buttons[1].rect)
 
