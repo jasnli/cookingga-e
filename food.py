@@ -22,6 +22,7 @@ class Food:
         self.y = y
         self.chop_number = 0
         self.movable = True
+        self.cooked_ness = 0
 
         if food_type == "steak":
             self.cooking_stage = 0

@@ -10,9 +10,10 @@ class Customer:
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
         self.order = []
 
-        # index 0: 1 cooked steak whole, 2 cooked steak chopped
-        # index 1: 1 fruit salad, 2 vegetable salad
-        # index 2: 1 soda, 2 orange juice, 3 water, 4 milkshake
+        # IF 0 AT ANY INDEX, THEN THE ORDER IS COMPLETE
+        # index 0: 1 cooked steak whole $10 , 2 cooked steak chopped $12
+        # index 1: 1 fruit salad $6, 2 caesar salad $8
+        # index 2: 1 soda $2, 2 orange juice $2, 3 water $1, 4 milkshake $4
 
     def customer_updater(self, image):
         self.customer_image = pygame.image.load(image)
