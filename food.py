@@ -23,13 +23,26 @@ class Food:
         self.chop_number = 0
         self.movable = True
         self.cooked_ness = 0
+        self.image_size = (0, 0)
 
-        if food_type == "steak":
+        if food_type == "steak":  # STEAK
             self.cooking_stage = 0
             if not self.cooked:
                 self.image = set_photo_and_resize("raw_steak.png", (256, 256))
                 self.image_size = self.image.get_size()
                 self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
+
+        if food_type == "carrot":  # CARROT
+            self.image = set_photo_and_resize("carrot.png", (256, 256))
+            self.image_size = self.image.get_size()
+            self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
+            self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "carrot.png")
+
+        if food_type == "lettuce":  # LETTUCE
+            self.image = set_photo_and_resize("lettuce.png", (256, 256))
+            self.image_size = self.image.get_size()
+            self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
+            self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "lettuce.png")
 
     def update_photo(self):
         if self.food_type == "steak":
@@ -51,6 +64,26 @@ class Food:
                     self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "cooked_steak_cut_2.png")
                 if self.chop_number == 3:
                     self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "cooked_steak_cut_3.png")
+
+        if self.food_type == "carrot":
+            if self.chop_number == 0:
+                self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "carrot.png")
+            if self.chop_number == 1:
+                self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "carrot_one_chop.png")
+            if self.chop_number == 2:
+                self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "carrot_two_chop.png")
+            if self.chop_number == 3:
+                self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "carrot_three_chop.png")
+
+        if self.food_type == "lettuce":
+            if self.chop_number == 0:
+                self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "lettuce.png")
+            if self.chop_number == 1:
+                self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "lettuce_one_chop.png")
+            if self.chop_number == 2:
+                self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "lettuce_two_chop.png")
+            if self.chop_number == 3:
+                self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "lettuce_three_chop.png")
 
     def chop_food(self):
         self.chop_number = self.chop_number + 1

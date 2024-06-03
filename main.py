@@ -106,12 +106,17 @@ move = False
 move_1 = False
 move_other_object = True
 selection_made = False
+show_mouse_coordinates = False
 
 new_order = False
 ordered = False
 # -------- Main Program Loop -----------
 while run:
     clock.tick(60)
+
+    if len(foods) > 0:
+        for i in foods:
+            i.update_photo()
 
     if new_order:
         random_customer_image = random.randint(0, 2)
@@ -138,6 +143,7 @@ while run:
         appliance_buttons[0].update_photo(stove_images[appliance_buttons[0].stove_animation_pic])
         appliance_buttons[1].x, appliance_buttons[1].y = 8000, 6000
         appliance_buttons[1].update_pos()
+
     # if selection_made:
     #     start = True
     # --- Main event loop
@@ -149,6 +155,11 @@ while run:
         if event.type == pygame.MOUSEMOTION:
             mouse_position = pygame.mouse.get_pos()
             mouse_position_text = temporary_font.render(str(mouse_position), True, (0, 0, 0))
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_m and not show_mouse_coordinates:
+                show_mouse_coordinates = True
+            elif event.key == pygame.K_m and show_mouse_coordinates:
+                show_mouse_coordinates = False
         if start_screen:
             buttons[0].x, buttons[0].y = 833, 550
             buttons[0].update_button()
@@ -212,12 +223,24 @@ while run:
                         if event.type == pygame.MOUSEBUTTONUP:  ## TURNS STOVE OFF
                             if event.button == 3:
                                 appliance_buttons[0].stove_on = False
-                if carrot_basket.rect.collidepoint(mouse_position):
+                if carrot_basket.rect.collidepoint(mouse_position): # HOVERING CARROT
                     carrot_hover_on = True
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        for i in range(1):
+                            carrot = Food("carrot", steak_table.x, steak_table.y - 50)
+                            foods.append(carrot)
+                        print('hi')
                 else:
                     carrot_hover_on = False
+
                 if lettuce_basket.rect.collidepoint(mouse_position):
                     lettuce_hover_on = True
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        for i in range(1):
+                            lettuce = Food("lettuce", steak_table.x + 50, steak_table.y - 50)
+                            foods.append(lettuce)
+
+                        print('hi')
                 else:
                     lettuce_hover_on = False
                 if steak_table.rect.collidepoint(mouse_position):
@@ -263,15 +286,15 @@ while run:
                             s.update_photo()
 
             # DRAGGING OBJECT CHANGE THIS LATER
-            # if len(foods) > 0:
+            if len(foods) > 0:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         move_1 = True
                 if move_1:
-                    for s in foods:
-                        if s.rect.collidepoint(event.pos) and move_other_object:
+                    for f in foods:
+                        if f.rect.collidepoint(event.pos) and move_other_object:
                             move = True
-                            moved_object = s
+                            moved_object = f
                             move_other_object = False
                         if move:
                             moved_object.move_food((mouse_position[0] - moved_object.image_size[0] / 2, mouse_position[1] - moved_object.image_size[0] / 2))
@@ -329,15 +352,16 @@ while run:
             if appliance_buttons[0].stove_on:
                 screen.blit(appliance_buttons[1].image, appliance_buttons[1].rect)
 
-        # steak
-        if len(foods) > 0:
-            for i in foods:
-                screen.blit(i.image, i.rect)
+            if len(foods) > 0:
+                for i in foods:
+                    screen.blit(i.image, i.rect)
+        # food
+
 
     frame += 1
 
-
-    screen.blit(mouse_position_text, mouse_position)
+    if show_mouse_coordinates:
+        screen.blit(mouse_position_text, mouse_position)
     pygame.display.update()
     ## END OF WHILE LOOP
 
