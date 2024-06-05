@@ -243,8 +243,14 @@ while run:
                         print('hi')
                 else:
                     lettuce_hover_on = False
+
                 if steak_table.rect.collidepoint(mouse_position):
                     steak_hover_on = True
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        for i in range(1):
+                            steak = Food("steak", steak_table.x, steak_table.y)
+                            foods.append(steak)
+                        print('hi')
                 else:
                     steak_hover_on = False
 
@@ -261,12 +267,12 @@ while run:
 
 
 
-            # SPAWN STEAK
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_s:
-                    for i in range(1):
-                        steak = Food("steak", mouse_position[0] - 128, mouse_position[1] - 128)
-                        foods.append(steak)
+            # # SPAWN STEAK
+            # if event.type == pygame.KEYDOWN:
+            #     if event.key == pygame.K_s:
+            #         for i in range(1):
+            #             steak = Food("steak", mouse_position[0] - 128, mouse_position[1] - 128)
+            #             foods.append(steak)
 
 
             if len(foods) > 0:
