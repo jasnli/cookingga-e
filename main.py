@@ -20,10 +20,10 @@ bg = pygame.image.load("background.jpg")
 
 # BUTTONS
 # 0 = Start, 1 = Start Cooking, 2 = Back, 3 = Serve
-buttons = [Button("start.png", 5000, 5000, (57 * 4, 23 * 4)), Button("start_cooking_button.png", 1300, 200, (612 / 1.25, 408 / 1.25)), Button("back_button.png", 10, 10, (256, 128))
-           , Button("serve_button.png", 1700, 100, (256, 128))]
+buttons = [Button("start.png", 5000, 5000, (57 * 4, 23 * 4)), Button("start_cooking_button.png", 1300, 200, (612 / 1.25, 408 / 1.25)), Button("back_button.png", 10, 10, (256, 128))]
 
 serve_overlay_button = Button("serve_overlay.png", 9933, 8378, (52 * 5, 20 * 5))
+plate = Food("plate", 9383, 9292)
 
 # APPLIANCES
 # 0 = Stove, 1 = Frying Pan
@@ -206,8 +206,13 @@ while run:
 
         # APPLIANCE SELECTION SCREEN
         if cooking:
+            plate.x, plate.y = SCREEN_WIDTH - plate.image_size[0], 200
+            plate.update_photo()
             trash_can.x, trash_can.y = SCREEN_WIDTH - trash_can.image_size[0], SCREEN_HEIGHT - trash_can.image_size[1]
             trash_can.update_button()
+
+
+
             if appliance_selection:
                 appliance_buttons[0].x, appliance_buttons[0].y = 400, SCREEN_HEIGHT - appliance_buttons[0].image_size[1] # PUTS STOVE IN FRAME
                 appliance_buttons[0].update_pos()
@@ -224,9 +229,6 @@ while run:
                             appliance_selection = False
                 else:
                     stove_hover_on = False
-            else:
-                appliance_buttons[0].x, appliance_buttons[0].y = 8000, 8000  # PUTS STOVE IN FRAME
-                appliance_buttons[0].update_pos()
 
 
             # STOVE SCREEN
@@ -359,7 +361,11 @@ while run:
                         foods.append(steak)
 
 
+
+
             if len(foods) > 0 and not frozen_overlay_screen:
+                # COMBINING FOOD
+
             # CHOPPING (TEMP)
                 for s in foods:
                     if event.type == pygame.MOUSEBUTTONDOWN and s.rect.collidepoint(event.pos) :
@@ -367,7 +373,12 @@ while run:
                             print(s.chop_number)
                             s.chop_food()
                             s.update_photo()
-
+                    # PLATE
+                    if pygame.Rect.colliderect(s.rect, plate.rect):
+                        if s.food_name == "cooked_steak" and plate.food_name == "plate":
+                            plate.food_name = "cooked_steak"
+                            plate.update_photo()
+                            foods.remove(s)
 
                 # FOODING STUFF
                 for s in foods:
@@ -402,7 +413,7 @@ while run:
                         move_1 = True
                 if move_1:
                     for f in foods:
-                        if f.rect.collidepoint(mouse_position) and move_other_object:
+                        if f.rect.collidepoint(mouse_position) and move_other_object and s.food_name != "plate":
                             move = True
                             moved_object = f
                             move_other_object = False
@@ -417,10 +428,17 @@ while run:
                                 move_1 = False
 
 
+
                 else:
                     move_other_object = True
 
-
+        else:
+            appliance_buttons[0].x, appliance_buttons[0].y = 8000, 8000  # PUTS STOVE IN FRAME
+            appliance_buttons[0].update_pos()
+            plate.x, plate.y = 8329, 9422
+            plate.update_photo()
+            trash_can.x, trash_can.y = 8273, 9481
+            trash_can.update_button()
 
     ##  ----- NO BLIT ZONE END  ----- ##
 
@@ -446,7 +464,7 @@ while run:
     if cooking:
         screen.blit(trash_can.image, trash_can.rect)
         screen.blit(buttons[2].image, buttons[2].rect)
-        screen.blit(buttons[3].image, buttons[3].rect)
+        screen.blit(plate.image, plate.rect)
         if appliance_selection:
             screen.blit(appliance_buttons[0].image, appliance_buttons[0].rect)
             if stove_hover_on:

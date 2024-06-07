@@ -27,6 +27,12 @@ class Food:
         self.image_size = (0, 0)
         self.food_name = ""
 
+        if food_type == "plate":
+            self.image = set_photo_and_resize("plate.png", (256, 256))
+            self.image_size = self.image.get_size()
+            self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
+            self.food_name = "plate"
+
         if food_type == "steak":  # STEAK
             self.cooking_stage = 0
             if not self.cooked:
@@ -57,8 +63,10 @@ class Food:
             self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "whole_cooked_steak.png")
             self.food_name = "whole_cooked_steak"
 
-
     def update_photo(self):
+        if self.food_type == "plate":
+            self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "plate.png")
+            self.food_name = "plate"
         if self.food_type == "steak":
             if not self.cooked:
                 if self.chop_number == 0:
@@ -129,10 +137,16 @@ class Food:
                 self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "lettuce_three_chop.png")
                 self.food_name = "chopped_lettuce_3"
 
+
+        if self.food_name == "whole_steak_with_carrots":
+            self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "whole_steak_with_carrots.png")
+        if self.food_name == "cut_steak_with_carrots":
+            self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "cut_steak_with_carrots.png")
         if self.food_name == "whole_cooked_steak":
             self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "whole_cooked_steak.png")
         if self.food_name == "cut_steak_meal_cooked":
             self.rect, self.image_size, self.image = rect_updater(self.image_size, self.image, self.x, self.y, self.rect, "cut_steak_meal_cooked.png")
+
 
     def chop_food(self):
         self.chop_number = self.chop_number + 1
