@@ -18,3 +18,7 @@ class Button:
     def update_button(self):
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
 
+
+    def update_image(self, image, resize):
+        self.image = set_photo_and_resize(image, resize)
+
