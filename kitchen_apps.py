@@ -16,7 +16,7 @@ class Appliance:
         self.appliance = appliance_type
 
         if self.appliance == "frying_pan":
-            self.image = set_photo_and_resize("frying_pan.png", (23 * 10, 42 * 10))
+            self.image = set_photo_and_resize("frying_pan.png", (23 * 15, 42 * 15))
             self.image_size = self.image.get_size()
             self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
 
