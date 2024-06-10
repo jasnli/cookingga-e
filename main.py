@@ -22,6 +22,8 @@ bg = pygame.image.load("background.jpg")
 # 0 = Start, 1 = Start Cooking, 2 = Back, 3 = Serve
 buttons = [Button("start.png", 5000, 5000, (57 * 4, 23 * 4)), Button("start_cooking_button.png", 1300, 200, (612 / 1.25, 408 / 1.25)), Button("back_button.png", 10, 10, (256, 128))]
 
+inventory_button = Button("inventory.png", 1400, 600, (300, 200))
+
 cutting_board = Button("cutting_board.png", 9399, 5950, (17 * 15, 24 * 15))
 serve_overlay_button = Button("serve_overlay.png", 9933, 8378, (52 * 5, 20 * 5))
 plate = Food("plate", 9383, 9292)
@@ -76,10 +78,15 @@ empty_text = title_font.render("", True, (114, 189, 53))
 main_order = [empty_text, order_cooked_steak_whole] #INDEX : 0 = COMPLETED, 1 = WHOLE
 side_order = [empty_text, order_fruit_salad, order_caesar_salad] #INDEX : 0 = COMPLETED, 1 = FRUIT, 2 = CAESAR
 drinks_order = [empty_text, order_soda, order_orange_juice, order_water, order_milkshake] #INDEX : 0 = COMPLETED, 1 = SODA, 2 = OJ, 3 = WATER, 4 = MILKSHAKE
+display_foods = [order_cooked_steak_whole, order_fruit_salad, order_caesar_salad, order_milkshake, order_orange_juice, order_water, order_soda]
+
 
 
 # [TEMP] mouse position
 mouse_position = (0, 0)
+
+
+temporary_position = 0
 
 # set up variables for the display
 SCREEN_HEIGHT = 1020
@@ -92,9 +99,20 @@ customer = Customer(SCREEN_HEIGHT)
 customer_pics = ["customer_1.png", "customer_2.png", "customer_3.png"]
 # foods creation
 foods = []
-made_mains = [0, 0] # INDEX 0 = WHOLE, INDEX 1 = CUT
+made_mains = [0] # INDEX 0 = WHOLE
 made_sides = [0, 0] # INDEX 0 = FRUIT, INDEX 1 = CAESAR
 made_drinks = [0, 0, 0, 0] # INDEX 0 = SODA, INDEX 1 = OJ, INDEX 2 = WATER, INDEX 3 = MILKSHAKE
+
+
+cooked_steak_display_num = title_font.render(str(made_mains[0]), True, (255, 50, 50))
+caesar_salad_display_num = title_font.render(str(made_sides[1]), True, (255, 50, 50))
+fruit_salad_display_num = title_font.render(str(made_sides[0]), True, (255, 50, 50))
+soda_display_num = title_font.render(str(made_drinks[0]), True, (255, 50, 50))
+oj_display_num = title_font.render(str(made_drinks[1]), True, (255, 50, 50))
+water_display_num = title_font.render(str(made_drinks[2]), True, (255, 50, 50))
+milkshake_display_num = title_font.render(str(made_drinks[3]), True, (255, 50, 50))
+display_inventory_amounts = [cooked_steak_display_num, caesar_salad_display_num, fruit_salad_display_num,
+                             soda_display_num, oj_display_num, water_display_num, milkshake_display_num]
 
 # VARIABLE FOR SCREENS
 start_screen = True
@@ -102,7 +120,7 @@ select_screen = False
 cooking = False
 appliance_selection = False
 stove_screen = False
-
+inventory = False
 
 # VARIABLES FOR HOVER
 stove_hover_on = False
@@ -112,7 +130,7 @@ steak_hover_on = False
 bread_hover_on = False
 
 # render the text for later
-title_message = "COOKING GAME" #CHANGE NAME LATER
+title_message = "COOKING WITH JASON LI" #CHANGE NAME LATER
 title_screen_msg = title_font.render(title_message, True, (114, 189, 53))
 temporary_text = temp_big_font.render("ALL SPRITES ARE TEMPORARY AS PLACEHOLDERS", True, (114, 189, 53))
 # [TEMP] mouse pos text
@@ -224,6 +242,18 @@ while run:
                 appliance_selection = True
                 select_screen = False
                 new_order = False
+            if event.type == pygame.MOUSEBUTTONDOWN and inventory_button.rect.collidepoint(mouse_position):
+                select_screen = False
+                inventory = True
+
+        if inventory:
+            if event.type == pygame.MOUSEBUTTONDOWN and buttons[2].rect.collidepoint(
+                    event.pos):  # BACK BUTTON TO CUSTOMER SCREEN
+                if event.button == 1:
+                    select_screen = True
+                    cooking = False
+                    inventory = False
+
 
         # COOKING STUFF BELOW
 
@@ -565,15 +595,26 @@ while run:
         screen.blit(title_screen_msg, (550, 250))
     if select_screen:
         # customer
+
         screen.blit(temporary_text, (50, 100))
         screen.blit(receipt, (customer.image_size[0] + 50, SCREEN_HEIGHT - receipt.get_size()[1] - 100))
         screen.blit(customer.customer_image, customer.rect)
         screen.blit(buttons[1].image, buttons[1].rect)
+        screen.blit(inventory_button.image, inventory_button.rect)
         if ordered:
             screen.blit(main_order[customer.order[0]], (710, 200))
             screen.blit(side_order[customer.order[1]], (710, 200 + 256))
             screen.blit(drinks_order[customer.order[2]], (710, 200 + 256 + 256))
 
+    if inventory:
+        screen.blit(buttons[2].image, buttons[2].rect)
+        temporary_position = 0
+        for i in range(len(display_foods)):
+            screen.blit(display_foods[i], (temporary_position, 200))
+            screen.blit(display_inventory_amounts[i], (temporary_position + 70, 500))
+
+
+            temporary_position += 250
     # start [TEMP]
     if cooking:
         screen.blit(trash_can.image, trash_can.rect)
