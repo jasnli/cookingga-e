@@ -4,8 +4,6 @@ from button import Button
 from customer import Customer
 from kitchen_apps import Appliance
 import random
-import time
-
 
 # set up pygame modules
 pygame.init()
@@ -483,12 +481,11 @@ while run:
                     salt_stays = True
 
             if len(foods) > 0 and not frozen_overlay_screen:
-
                 for s in foods:
                     # PLATE
                     if pygame.Rect.colliderect(s.rect, plate.rect):
                         print(s.food_name)
-                        if s.food_name == "cooked_steak":
+                        if s.food_name == "cooked_steak" and plate.food_name == "plate":
                             plate.food_name = "plate_with_steak"
                             plate.combination()
                             foods.remove(s)
@@ -569,7 +566,7 @@ while run:
                         move_1 = True
                 if move_1 and not cutting_mode:
                     for f in foods:
-                        if f.rect.collidepoint(mouse_position) and move_other_object and s.food_type != "plate":
+                        if f.rect.collidepoint(mouse_position) and move_other_object and f.food_type != "plate":
                             move = True
                             moved_object = f 
                             move_other_object = False
