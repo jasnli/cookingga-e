@@ -14,7 +14,7 @@ title_font = pygame.font.SysFont('curlz', 120)
 title_font.set_bold(True)
 temporary_font = pygame.font.SysFont('Arial', 40)
 temp_big_font = pygame.font.SysFont('Arial', 100)
-pygame.display.set_caption("COOKING GAME [CHANGE NAME LATER]")
+pygame.display.set_caption("KITCHEN COOKING")
 # background
 bg = pygame.image.load("background.jpg")
 
@@ -130,7 +130,7 @@ steak_hover_on = False
 bread_hover_on = False
 
 # render the text for later
-title_message = "COOKING WITH JASON LI" #CHANGE NAME LATER
+title_message = "KITCHEN COOKING"
 title_screen_msg = title_font.render(title_message, True, (114, 189, 53))
 temporary_text = temp_big_font.render("ALL SPRITES ARE TEMPORARY AS PLACEHOLDERS", True, (114, 189, 53))
 # [TEMP] mouse pos text
@@ -170,7 +170,7 @@ while run:
     if frame == temporary_frame + 60:
         serve_overlay_button.update_image("serve_overlay.png", (52 * 5, 20 * 5))
 
-
+    # COOKING & BURNING
     if len(foods) > 0:
         for s in foods:
             s.update_photo()
@@ -185,6 +185,7 @@ while run:
                     s.burnt = True
                     s.update_photo()
 
+    # NEW ORDER
     if new_order:
         random_customer_image = random.randint(0, 2)
         customer.customer_updater(customer_pics[random_customer_image])
@@ -211,8 +212,6 @@ while run:
         appliance_buttons[1].x, appliance_buttons[1].y = 8000, 6000
         appliance_buttons[1].update_pos()
 
-    # if selection_made:
-    #     start = True
     # --- Main event loop
     ## ----- NO BLIT ZONE START ----- ##
     for event in pygame.event.get():  # User did something
@@ -227,6 +226,7 @@ while run:
                 show_mouse_coordinates = True
             elif event.key == pygame.K_m and show_mouse_coordinates:
                 show_mouse_coordinates = False
+        # BUTTON TO START
         if start_screen:
             buttons[0].x, buttons[0].y = 833, 550
             buttons[0].update_button()
@@ -236,6 +236,7 @@ while run:
                 start_screen = False
                 buttons[0].x, buttons[0].y = 5000, 5000
                 buttons[0].update_button()
+        # BUTTON TO COOK OR INVENTORY
         if select_screen:
             if event.type == pygame.MOUSEBUTTONDOWN and buttons[1].rect.collidepoint(event.pos):
                 cooking = True
@@ -246,7 +247,18 @@ while run:
                 select_screen = False
                 inventory = True
 
+        # INVENTORY UPDATING
         if inventory:
+            cooked_steak_display_num = title_font.render(str(made_mains[0]), True, (255, 50, 50))
+            caesar_salad_display_num = title_font.render(str(made_sides[1]), True, (255, 50, 50))
+            fruit_salad_display_num = title_font.render(str(made_sides[0]), True, (255, 50, 50))
+            soda_display_num = title_font.render(str(made_drinks[0]), True, (255, 50, 50))
+            oj_display_num = title_font.render(str(made_drinks[1]), True, (255, 50, 50))
+            water_display_num = title_font.render(str(made_drinks[2]), True, (255, 50, 50))
+            milkshake_display_num = title_font.render(str(made_drinks[3]), True, (255, 50, 50))
+            display_inventory_amounts = [cooked_steak_display_num, fruit_salad_display_num, caesar_salad_display_num,
+                                         soda_display_num, oj_display_num, water_display_num, milkshake_display_num]
+
             if event.type == pygame.MOUSEBUTTONDOWN and buttons[2].rect.collidepoint(
                     event.pos):  # BACK BUTTON TO CUSTOMER SCREEN
                 if event.button == 1:
@@ -285,6 +297,7 @@ while run:
 
             # STOVE SCREEN
             if stove_screen:
+                # MOVING EVERYTHING INTO FRAME
                 plate.x, plate.y = SCREEN_WIDTH - plate.image_size[0] - 200, 200
                 plate.update_photo()
                 bowl.x, bowl.y = SCREEN_WIDTH - bowl.image_size[0] - 200, 500
@@ -305,6 +318,7 @@ while run:
                 bread_table.x, bread_table.y = steak_table.x + steak_table.image_size[0], SCREEN_HEIGHT - bread_table.image_size[1] # BREAD TABLE IN FRAME
                 bread_table.update_button()
 
+                # MOVING THE SALT SHAKER
                 if salt_stays:
                     salt_shaker.x, salt_shaker.y = 100, 800
                     salt_shaker.update_photo()
@@ -318,7 +332,7 @@ while run:
                     if event.type == pygame.MOUSEBUTTONUP:
                         salt_stays = True
 
-
+                # CUTTING ANIMATION
                 if knife.rect.collidepoint(mouse_position):
                     if event.type == pygame.MOUSEBUTTONDOWN and not cutting_mode:
                         cutting_mode = True
@@ -327,6 +341,7 @@ while run:
                         cutting_mode = False
                         knife.update_image("knife.png", (25 * 10, 27 * 10))
 
+                # STOVE ACTION
                 if appliance_buttons[0].rect.collidepoint(mouse_position):
                     if not appliance_buttons[0].stove_on:
                         if event.type == pygame.MOUSEBUTTONUP:  ## TURNS STOVE ON
@@ -336,6 +351,8 @@ while run:
                         if event.type == pygame.MOUSEBUTTONUP:  ## TURNS STOVE OFF
                             if event.button == 3:
                                 appliance_buttons[0].stove_on = False
+
+                # HOVERS
                 if carrot_basket.rect.collidepoint(mouse_position): # HOVERING CARROT
                     carrot_hover_on = True
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -345,7 +362,7 @@ while run:
                 else:
                     carrot_hover_on = False
 
-                if lettuce_basket.rect.collidepoint(mouse_position):
+                if lettuce_basket.rect.collidepoint(mouse_position): # HOVERING LETTUCE
                     lettuce_hover_on = True
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         for i in range(1):
@@ -354,7 +371,7 @@ while run:
                 else:
                     lettuce_hover_on = False
 
-                if steak_table.rect.collidepoint(mouse_position):
+                if steak_table.rect.collidepoint(mouse_position): # HOVERING STEAK
                     steak_hover_on = True
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         for i in range(1):
@@ -363,7 +380,7 @@ while run:
                 else:
                     steak_hover_on = False
 
-                if bread_table.rect.collidepoint(mouse_position):
+                if bread_table.rect.collidepoint(mouse_position): # HOVERING BREAD
                     bread_hover_on = True
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         for i in range(1):
@@ -389,7 +406,7 @@ while run:
                 knife.update_button()
 
 
-            # RIGHT CLICK OVERLAY
+            # RIGHT CLICK OVERLAY (SERVE BUTTON)
             if frozen_overlay_screen:
                 serve_overlay_button.x, serve_overlay_button.y = temporary_frozen_overlay_position[0], temporary_frozen_overlay_position[1]
                 serve_overlay_button.update_button()
@@ -401,6 +418,7 @@ while run:
                 else:
                     serve_overlay_button.update_image("serve_overlay.png", (52 * 5, 20 * 5))
 
+                # UPDATING INV
                 if event.type == pygame.MOUSEBUTTONDOWN and serve_overlay_button.rect.collidepoint(mouse_position):
                     if food_being_served.food_name == "whole_cooked_steak":
                         made_mains[0] = made_mains[0] + 1
@@ -451,23 +469,12 @@ while run:
                         serve_overlay_button.update_image("serve_error_overlay.png", (52 * 5, 20 * 5))
                         valid_entry = False
 
-
-
-
             else:
                 serve_overlay_button.x, serve_overlay_button.y = 9483, 8409
                 serve_overlay_button.update_button()
                 valid_entry = False
 
-
-
-            # TEMPORARILY SPAWN COOKED STEAK TO TEST OUT THE OVERLAY
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_s:
-                    for i in range(1):
-                        steak = Food("whole_cooked_steak", mouse_position[0] - 128, mouse_position[1] - 128)
-                        foods.append(steak)
-
+            # ADDING SALT TO BOWL
             if pygame.Rect.colliderect(salt_shaker.rect, bowl.rect):
                 if bowl.food_name == "caesar_salad_no_salt":
                     print(bowl.food_name)
@@ -477,7 +484,6 @@ while run:
 
             if len(foods) > 0 and not frozen_overlay_screen:
 
-            # CHOPPING (TEMP)
                 for s in foods:
                     # PLATE
                     if pygame.Rect.colliderect(s.rect, plate.rect):
@@ -512,9 +518,6 @@ while run:
                             bowl.food_name = "caesar_salad_no_salt"
                             bowl.combination()
                             foods.remove(s)
-
-
-
 
                     # CUTTING
                     if pygame.Rect.colliderect(s.rect, cutting_board.rect):
